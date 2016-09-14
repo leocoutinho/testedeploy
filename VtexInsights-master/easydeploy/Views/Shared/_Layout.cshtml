@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - VtexInsights</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jquery_ui")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/Scripts/jquery.signalR-2.2.1.min.js")
+    @Scripts.Render("~/signalr/hubs")
+</head>
+<body>
+    <header>
+        <div class="inner">
+            <h1>VtexInsights</h1>
+            -<h2>Easily deploy your on Vtex data BI enviroment on Microsoft Azure and Microsoft PowerBI</h2>
+            <a href="https://github.com/vtex/VtexInsights" class="button"><small>View project on</small> GitHub</a>
+            <p>
+                You can check the service health accessing the @Html.ActionLink("Dashboard", "Index", "Dashboard").
+            </p>
+        </div>
+    </header>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li><a target="_blank" href="https://github.com/vtex/VtexInsights/blob/master/README.md">About</a></li>
+                    <li>@Html.ActionLink("Dashboard", "Index", "Dashboard")</li>
+                    <li><a target="_blank" href="https://github.com/vtex/VtexInsights/wiki">Documentation</a></li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+        
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Vtex Insights</p>
+        </footer>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

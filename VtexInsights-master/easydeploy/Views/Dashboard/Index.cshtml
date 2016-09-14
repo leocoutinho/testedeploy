@@ -1,0 +1,86 @@
+﻿@using easydeploy.Models;
+@{
+
+    ViewBag.Title = "Home Page";
+}
+<br />
+<p>
+    This page content will be refreshed each 30 seconds
+</p>
+<br />
+<div class="row">
+    <div id="accordion">
+        @foreach (string keyname in ViewBag.AppInfo.GetApplicationInfos().Keys)
+            {
+                FeatureInfo feature = ViewBag.AppInfo.GetApplicationInfo(keyname);
+            <h3 id="@keyname"><b>@feature.Name</b> - <span class="class_@feature.Status">@feature.Status</span></h3>
+            <div>
+                <p>
+                    <b>Description:</b> <span>@feature.Description</span><br />
+                    <b>Value:</b> <span>@feature.Value </span><br />
+                    <b>Details:</b> <span>@feature.Details</span>
+                </p>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#accordion").accordion();
+
+        $.connection.hub.start()
+        .done(function () {
+            setTimeout("UpdateFeatureInfo();", 30000);
+            console.log('Now connected, connection ID=' + $.connection.hub.id);
+        })
+        .fail(function () {
+            console.log('Could not Connect!');
+        });
+
+
+    });
+
+    function UpdateFeatureInfo() {
+        var dashboardHub = $.connection.dashboardHub;
+        dashboardHub.server.getFeatureInfo().done(function (infos) {
+            console.log('Invocation of getFeatureInfo succeeded');
+
+            $.each(infos, function () {
+                var info = this;
+                //console.log("KpiName=" + info.KpiName + " Name=" + info.Name + " Status=" + info.Status + " Description: " + info.Description + " Value: " + info.Value + " Details: " + info.Details);
+
+                //recuperar o H3
+                var h3 = $('#' + info.KpiName);
+
+                //Recuperando o Status
+                var status = '';
+                switch (info.Status) {
+                    case 0: status = 'Success'; break;
+                    case 1: status = 'Error'; break;
+                    case 2: status = 'Unavailable'; break;
+                }
+                //$('#' + info.KpiName).children()[2].innerText = status;
+                h3.children()[2].innerText = status;
+
+                //Recuperar o div
+                var div = $('#' + info.KpiName).next();
+                //recuperar o Div.p
+                var paragraph = div.children()[0];
+
+                //First Span
+                paragraph.children[1].innerText = info.Description;
+                paragraph.children[4].innerText = info.Value;
+                paragraph.children[7].innerText = info.Details;
+
+            });
+
+
+        }).fail(function (error) {
+            console.log('Invocation of getFeatureInfo failed. Error: ' + error);
+        });
+
+        setTimeout("UpdateFeatureInfo();", 30000);
+    }
+
+</script>
